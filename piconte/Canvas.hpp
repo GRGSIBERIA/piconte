@@ -10,13 +10,16 @@ namespace piconte
 		Image image;
 		DynamicTexture canvas;
 
+		Point prevPos;
+
 		void DrawCanvas(const Color& color)
 		{
 			auto pos = Mouse::Pos() - bounds.pos;
 			pos.x = Clamp(pos.x, 0, bounds.w - 1);
 			pos.y = Clamp(pos.y, 0, bounds.h - 1);
 
-			Circle(pos, 3).overwrite(image, color);
+			Line(prevPos, pos).overwrite(image, color);
+			canvas.fill(image);
 		}
 
 	public:
@@ -29,12 +32,12 @@ namespace piconte
 
 		void Update(const Color& color)
 		{
-			canvas.drawAt(bounds.pos);
-
-			if (Input::MouseL.pressed)
+			if (Input::MouseL.pressed && bounds.mouseOver)
 			{
 				DrawCanvas(color);
 			}
+			canvas.draw(bounds.pos);
+			prevPos = Mouse::Pos() - bounds.pos;
 		}
 	};
 }
