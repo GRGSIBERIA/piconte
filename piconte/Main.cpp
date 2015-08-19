@@ -1,6 +1,7 @@
 ﻿#include <Siv3D.hpp>
 #include "Canvas.hpp"
 #include "Coloring.hpp"
+#include "ColorPalette.hpp"
 
 void Main()
 {
@@ -13,8 +14,12 @@ void Main()
 
 	piconte::Canvas canvas(Rect((Window::Width() - 800) >> 1, 32 + 16, 800, 600));
 
+	piconte::ColorPalette palette(Rect(Window::Width() - 200 - 16, 32 + 16, 200, 200));
+
 	while (System::Update())
 	{
-		canvas.Update(Palette::Black);
+		palette.Update();
+		canvas.Update(palette.Pick());
+		
 	}
 }
