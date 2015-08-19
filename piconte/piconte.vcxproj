@@ -163,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Canvas.hpp" />
+    <ClInclude Include="Coloring.hpp" />
     <ClInclude Include="ColorPalette.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
