@@ -196,3 +196,4 @@ FakesAssemblies/
 *.opt
 
 piconte/piconte_log.html
+piconte/Screenshot/*.*
