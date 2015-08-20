@@ -16,11 +16,12 @@ namespace piconte
 
 		HSV pick;
 
+		const double hdiv;
+		const double wdiv;
+		const double huediv;
+
 		void RedrawPalette()
 		{
-			const double hdiv = 1.0 / (double)rect.h;
-			const double wdiv = 1.0 / (double)rect.w;
-
 #pragma omp parallel for
 			for (int i = 0; i < rect.h; ++i)
 			{
@@ -49,10 +50,6 @@ namespace piconte
 
 		void TestMouseClick()
 		{
-			const double huediv = 360.0 / (double)rect.w;
-			const double hdiv = 1.0 / (double)rect.h;
-			const double wdiv = 1.0 / (double)rect.w;
-
 			if (rect.mouseOver && Input::MouseL.pressed)
 			{
 				auto pos = Relative(rect);
@@ -67,6 +64,17 @@ namespace piconte
 			}
 		}
 
+		void DrawSelector()
+		{
+			const double x = rect.x + pick.v * rect.w;
+			const double y = rect.y + pick.s * rect.h;
+			Circle(x, y, 6).drawArc(0, 360, 1);
+			Circle(x, y, 5).drawArc(0, 360, 1, 0, Palette::Black);
+
+			const double h = hueRect.x + pick.h * (rect.w / 360.0);
+			Line(h, hueRect.y, h, hueRect.y + 16).draw(Palette::Black);
+		}
+
 	public:
 		ColorPalette(const Rect& paletteSize)
 			: 
@@ -74,7 +82,10 @@ namespace piconte
 			himage(paletteSize.w, 16),
 			pick(0, 0, 0), 
 			rect(paletteSize),
-			hueRect(paletteSize.x, paletteSize.y + paletteSize.h + 16, paletteSize.w, 16)
+			hueRect(paletteSize.x, paletteSize.y + paletteSize.h + 16, paletteSize.w, 16),
+			hdiv(1.0 / (double)rect.h),
+			wdiv(1.0 / (double)rect.w),
+			huediv(360.0 / (double)rect.w)
 		{
 			palette = DynamicTexture(pimage);
 			hue = DynamicTexture(himage);
@@ -87,9 +98,10 @@ namespace piconte
 			palette.draw(rect.x, rect.y);
 			hue.draw(hueRect.x, hueRect.y);
 			TestMouseClick();
+			DrawSelector();
 		}
 
-		const Color Pick() const
+		Color Pick() const
 		{
 			return pick.toColor();
 		}
